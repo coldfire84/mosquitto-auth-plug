@@ -1,10 +1,7 @@
-# mosquitto-auth-plug
+# Fork-specific changes
+Merge changes from whendonkiesfly/mosquitto-auth-plug to support ACL checking with MongoDB, plus merge changes from jllopis/mosquitto-auth-plug to support Mosquitto 1.6.x.
 
-As per 2019-03-11 I am archiving this repository and closing all currently open issues and pull requests without prejudice. The repository will continue to exist and you are welcome to work on your own fork of it, as long as you observe the LICENSEs.
-
-I have not used the `mosquitto-auth-plug` myself for years now, but my users expect, nay, demand, that I support and help them with it. We've received over 580 stars (thank you for that!), and yet some people can't even be bothered to read the documentation and then send me private e-mails or DMs on Twitter, etc. to complain and/or ask for help. I'm tired of having to work on understanding and fixing issues users are experiencing with the software. I'm also a bit tired of the lack of help I've received for this project.
-
-The original README begins below this line.
+The original README begins below this line (minus the swan song!).
 
 # mosquitto-auth-plug
 
