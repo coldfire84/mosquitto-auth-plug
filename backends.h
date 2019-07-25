@@ -55,5 +55,6 @@ typedef int (f_superuser)(void *conf, const char *username);
 typedef int (f_aclcheck)(void *conf, const char *clientid, const char *username, const char *topic, int acc);
 
 void t_expand(const char *clientid, const char *username, const char *in, char **res);
+int mosquitto_auth_sub_topic_matches_acl(const char *acl_topic, const char *req_topic, int *result);
 
 #endif
