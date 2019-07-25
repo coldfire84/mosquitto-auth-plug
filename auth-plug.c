@@ -499,7 +499,7 @@ int mosquitto_auth_security_cleanup(void *userdata, struct mosquitto_auth_opt *a
 
 
 #if MOSQ_AUTH_PLUGIN_VERSION >=3
-int mosquitto_auth_unpwd_check(void *userdata, const struct mosquitto *client, const char *username, const char *password)
+int mosquitto_auth_unpwd_check(void *userdata, struct mosquitto *client, const char *username, const char *password)
 #else
 int mosquitto_auth_unpwd_check(void *userdata, const char *username, const char *password)
 #endif
@@ -521,12 +521,12 @@ int mosquitto_auth_unpwd_check(void *userdata, const char *username, const char 
 		free(e->username);
 		free(e->clientid);
 		e->username = strdup(username);
-		e->clientid = strdup("client id not available");
+		e->clientid = strdup(mosquitto_client_id(client));
 	} else {
 		e = (struct cliententry *)malloc(sizeof(struct cliententry));
 		e->key = (void *)client;
 		e->username = strdup(username);
-		e->clientid = strdup("client id not available");
+		e->clientid = strdup(mosquitto_client_id(client));
 		HASH_ADD(hh, ud->clients, key, sizeof(void *), e);
 	}
 #endif
@@ -598,7 +598,7 @@ int mosquitto_auth_unpwd_check(void *userdata, const char *username, const char 
 }
 
 #if MOSQ_AUTH_PLUGIN_VERSION >= 3
-int mosquitto_auth_acl_check(void *userdata, int access, const struct mosquitto *client, const struct mosquitto_acl_msg *msg)
+int mosquitto_auth_acl_check(void *userdata, int access, struct mosquitto *client, const struct mosquitto_acl_msg *msg)
 #else
 int mosquitto_auth_acl_check(void *userdata, const char *clientid, const char *username, const char *topic, int access)
 #endif
@@ -652,11 +652,11 @@ int mosquitto_auth_acl_check(void *userdata, const char *clientid, const char *u
 		return MOSQ_DENY_ACL;
 	}
 
-	_log(LOG_DEBUG, "mosquitto_auth_acl_check(..., %s, %s, %s, %s)",
+	_log(LOG_DEBUG, "mosquitto_auth_acl_check(..., %s, %s, %s, %d)",
 		clientid ? clientid : "NULL",
 		username ? username : "NULL",
 		topic ? topic : "NULL",
-		access == MOSQ_ACL_READ ? "MOSQ_ACL_READ" : "MOSQ_ACL_WRITE" );
+		access );
 
 
 	granted = acl_cache_q(clientid, username, topic, access, userdata);
@@ -749,7 +749,7 @@ int mosquitto_auth_acl_check(void *userdata, const char *clientid, const char *u
 
 
 #if MOSQ_AUTH_PLUGIN_VERSION >= 3
-int mosquitto_auth_psk_key_get(void *userdata, const struct mosquitto *client, const char *hint, const char *identity, char *key, int max_key_len)
+int mosquitto_auth_psk_key_get(void *userdata, struct mosquitto *client, const char *hint, const char *identity, char *key, int max_key_len)
 #else
 int mosquitto_auth_psk_key_get(void *userdata, const char *hint, const char *identity, char *key, int max_key_len)
 #endif

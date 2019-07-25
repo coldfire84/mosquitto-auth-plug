@@ -154,6 +154,8 @@ int pbkdf2_check(char *password, char *hash)
 		evpmd = EVP_sha1();
 	} else if (strcmp(sha, "sha512") == 0) {
 		evpmd = EVP_sha512();
+	} else if (strcmp(sha, "whirlpool") == 0) {
+		evpmd = EVP_whirlpool();
 	}
 
 	rc = PKCS5_PBKDF2_HMAC(password, strlen(password),

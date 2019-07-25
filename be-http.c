@@ -87,14 +87,16 @@ static int get_string_envs(CURL *curl, const char *required_env, char *querystri
 		curl_free(escaped_val);
 	}
 
-	if (escaped_key) free(escaped_key);
-	if (escaped_val) free(escaped_val);
+	// They are already freed by curl_free above
+	if (escaped_key) escaped_key = NULL;
+	if (escaped_val) escaped_val = NULL;
 	free(env_string);
 	return (num);
 }
 
 static int http_post(void *handle, char *uri, const char *clientid, const char *username, const char *password, const char *topic, int acc, int method)
 {
+
 	struct http_backend *conf = (struct http_backend *)handle;
 	CURL *curl;
 	struct curl_slist *headerlist=NULL;
@@ -208,7 +210,7 @@ static int http_post(void *handle, char *uri, const char *clientid, const char *
 		}
 	} else {
 		_log(LOG_DEBUG, "http req fail url=%s re=%s", url, curl_easy_strerror(re));
-		ok = BACKEND_ERROR;
+		ok = BACKEND_DEFER;
 	}
 
 	curl_easy_cleanup(curl);
