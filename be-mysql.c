@@ -72,8 +72,11 @@ void *be_mysql_init()
 	char *opt_flag;
 	int port;
 	bool ssl_enabled;	
+#if (defined(MYSQL_VERSION_ID)) && (MYSQL_VERSION_ID > 50012)
+	int reconnect = false;
+#else
 	my_bool reconnect = false;
-	
+#endif
 
 	_log(LOG_DEBUG, "}}}} MYSQL");
 
