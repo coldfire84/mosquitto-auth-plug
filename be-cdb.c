@@ -113,7 +113,7 @@ int be_cdb_getuser(void *handle, const char *username, const char *password, cha
 
 /*
  * Check access to topic for username. Look values for a key "acl:username"
- * and use mosquitto_topic_matches_sub() to validate the topic.
+ * and use mosquitto_auth_sub_topic_matches_acl() to validate the topic.
  */
 
 int be_cdb_access(void *handle, const char *username, char *topic)
@@ -123,7 +123,7 @@ int be_cdb_access(void *handle, const char *username, char *topic)
 	unsigned klen;
 	int found = 0;
 	struct cdb_find cdbf;
-	bool bf;
+	int bf = FALSE;
 
 	if (!conf || !username || !topic)
 		return (0);
@@ -142,7 +142,7 @@ int be_cdb_access(void *handle, const char *username, char *topic)
 		val = malloc(vlen);
 		cdb_read(conf->cdb, val, vlen, vpos);
 
-		mosquitto_topic_matches_sub(val, topic, &bf);
+		mosquitto_auth_sub_topic_matches_acl(val, topic, &bf);
 		found |= bf;
 
 		free(val);

@@ -287,7 +287,7 @@ int be_pg_aclcheck(void *handle, const char *clientid, const char *username, con
 	struct pg_backend *conf = (struct pg_backend *)handle;
 	char *v = NULL;
 	int match = BACKEND_DEFER;
-	bool bf;
+	int bf = FALSE;
 	PGresult *res = NULL;
 
 	_log(LOG_DEBUG, "USERNAME: %s, TOPIC: %s, acc: %d", username, topic, acc);
@@ -337,7 +337,7 @@ int be_pg_aclcheck(void *handle, const char *clientid, const char *username, con
 
 			t_expand(clientid, username, v, &expanded);
 			if (expanded && *expanded) {
-				mosquitto_topic_matches_sub(expanded, topic, &bf);
+				mosquitto_auth_sub_topic_matches_acl(expanded, topic, &bf);
 				if (bf) match = BACKEND_ALLOW;
 				_log(LOG_DEBUG, "  postgres: topic_matches(%s, %s) == %d",
 				     expanded, v, bf);

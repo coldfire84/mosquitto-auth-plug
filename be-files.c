@@ -358,7 +358,7 @@ static int do_aclcheck(dllist * acl_list,
 		           int access)
 {
 	char buf[512];
-	bool ret;
+	int ret = FALSE;
 	acl_entry *acl;
 	const char *t;
 	const char *si;
@@ -391,7 +391,7 @@ static int do_aclcheck(dllist * acl_list,
 			}
 		}
 		*di = '\0';
-		if (mosquitto_topic_matches_sub(buf, topic, &ret) != MOSQ_ERR_SUCCESS) {
+		if (mosquitto_auth_sub_topic_matches_acl(buf, topic, &ret) != MOSQ_ERR_SUCCESS) {
 			LOG(MOSQ_LOG_ERR, "invalid topic '%s'", buf);
 		} else if (ret && (access & acl->access) != 0) {
 			return BACKEND_ALLOW;
