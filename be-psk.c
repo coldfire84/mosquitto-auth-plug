@@ -86,7 +86,7 @@ char *be_psk_getuser(void *handle, const char *username, const char *password, i
 
 /*
  * Check access to topic for username. Look values for a key "acl:username"
- * and use mosquitto_topic_matches_sub() to validate the topic.
+ * and use mosquitto_auth_sub_topic_matches_acl() to validate the topic.
  */
 
 int be_psk_access(void *handle, const char *username, char *topic)
